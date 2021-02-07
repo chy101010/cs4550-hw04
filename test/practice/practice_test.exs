@@ -25,7 +25,20 @@ defmodule Practice.PracticeTest do
     assert calc("10 - 2") == 8
     assert calc("5 * 3 + 8") == 23
     assert calc("8 + 5 * 3") == 23
+    # more tests
+    assert calc("8 + 5 * 10 / 10 + 20") == 33
+    assert calc("8 * 5 * 10 - 10 * 20") == 200
+    assert calc("10 - -5 - 10 - 10 * 20") == -195
+    assert calc("10 + 5 / 5 * 10") == 20
+    assert calc("10 + 5 / 5 * -2") == 8
   end
 
   # TODO: Add two unit tests for palindrome.
+  test "some strings" do
+    assert palindrome("aba") === true
+    assert palindrome("vaa") === false
+    assert palindrome("12345|54321") === true
+    assert palindrome("abccba") === true
+    assert palindrome("abba") === true
+  end
 end
