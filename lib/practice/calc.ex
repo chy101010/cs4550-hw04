@@ -1,7 +1,11 @@
 defmodule Practice.Calc do
   def parse_float(text) do
-    {num, _} = Float.parse(text)
-    num
+    try do 
+      {num, _} = Float.parse(text)
+      num
+    rescue
+      MatchError -> raise ArgumentError, "Invalid Argument Error. Put valid positive Integer"
+    end 
   end
 
   #  Tokenize the expression: (e.g. [+, 1] => [{:op, "+"}, {:num, 1.0}]
@@ -12,7 +16,7 @@ defmodule Practice.Calc do
       "/" -> {:op, "/"}
       "*" -> {:op, "*"}
        x  -> {:num, parse_float(x)}
-        _  -> raise "input error func tokenize, calc.ex"
+        _  -> raise ArgumentError, "input error func tokenize, calc.ex"
     end
   end
 
@@ -23,18 +27,22 @@ defmodule Practice.Calc do
       "-" -> 1
       "*" -> 2
       "/" -> 2
-       _ -> raise "input error func precedence, calc.ex"
+       _ -> raise ArgumentError, "input error func precedence, calc.ex"
     end
   end
 
   # execute an operation based on the operator 
   def handleOperation(o1, o2, op) do
+    errorMsg = "input error func handleOperation, calc.ex"
+    if (!o1 || !o2 || (op === "/" && o1 == 0)) do
+      raise ArgumentError, errorMsg
+    end 
     case op do
       "+" -> o2 + o1
       "-" -> o2 - o1
       "/" -> o2 / o1 
       "*" -> o2 * o1
-        _  -> raise "input error func handleOperation, calc.ex"
+        _  -> raise ArgumentError, errorMsg
     end
   end
 
@@ -103,17 +111,26 @@ defmodule Practice.Calc do
     end
   end
 
+  def checkArgument(str) do
+    String.contains?(str, ["+", "*", "/"]) && String.length(str) > 1
+  end 
+
 
   def calc(expr) do
     # This should handle +,-,*,/ with order of operations,
     # but doesn't need to handle parens.
-    expr
-    |> String.split()
-    |> Enum.map(fn value -> tokenize(value) end) 
-    |> Enum.reverse
-    |> convertPost([], [])
-    |> Enum.reverse
-    |> prefixCalculator([])
+    split = String.split(expr)
+    
+    if(Enum.any?(split, fn(str) -> checkArgument(str) end)) do
+      raise ArgumentError, "Invalid Argument, put space "
+    else
+      split 
+      |> Enum.map(fn value -> tokenize(value) end) 
+      |> Enum.reverse
+      |> convertPost([], [])
+      |> Enum.reverse
+      |> prefixCalculator([])
+    end 
 
     # 2
     # Hint:

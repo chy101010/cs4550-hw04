@@ -13,6 +13,9 @@ defmodule Practice.Factor do
     end
 
     def findFactors(value, i, acc) do
+        if(value <= 0) do
+            raise ArgumentError, "Positive value only"
+        end 
         if(rem(value, 2) === 0) do
             findFactors(div(value, 2), i, acc ++ [2])
         else
@@ -33,7 +36,6 @@ defmodule Practice.Factor do
         end
     end
 
-    
     def factor(expr) do
         if(is_integer(expr)) do
             findFactors(expr, 3, [])

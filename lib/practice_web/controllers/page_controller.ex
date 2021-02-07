@@ -12,13 +12,25 @@ defmodule PracticeWeb.PageController do
   end
 
   def calc(conn, %{"expr" => expr}) do
-    y = Practice.calc(expr)
-    render conn, "calc.html", expr: expr, y: y
+    try do
+      y = Practice.calc(expr)
+      render conn, "calc.html", expr: expr, y: y
+    rescue
+      ArgumentError ->
+      y = "Invalid Argument Error. Put a space inbetween operators and operants. Dosn't support 0 division"
+      render conn, "calc.html", expr: expr, y: y
+    end 
   end
 
   def factor(conn, %{"x" => x}) do
-    y = Enum.join(Practice.factor(x), ", ")  
-    render conn, "factor.html", x: x, y: y
+    try do
+      y = Enum.join(Practice.factor(x), ", ")  
+      render conn, "factor.html", x: x, y: y
+    rescue
+      ArgumentError ->
+      y = "Invalid Argument Error. Put valid positive Integer"
+      render conn, "factor.html", x: x, y: y
+    end 
   end
 
   # TODO: Add an action for palindrome.
