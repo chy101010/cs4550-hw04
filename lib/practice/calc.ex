@@ -102,11 +102,11 @@ defmodule Practice.Calc do
         {:op, value} ->
           len = length(stack)
           # right
-          pop1 = List.pop_at(stack, len - 1)
+          {value1, stack1} = List.pop_at(stack, len - 1)
           # left
-          pop2 = List.pop_at(elem(pop1, 1), len - 2)
-          result = handleOperation(elem(pop2, 0), elem(pop1, 0), value)
-          prefixCalculator(elem(values, 1), elem(pop2, 1) ++ [result])
+          {value2, stack2} = List.pop_at(stack1, len - 2)
+          result = handleOperation(value2, value1, value)
+          prefixCalculator(elem(values, 1), stack2 ++ [result])
       end
     end
   end
